@@ -7,9 +7,9 @@ namespace CabInvoiceGenratorTest
     {
         InvoiceGenerator invoiceGenerator = null;
 
-        /// <summary>
+        
         /// Test case 1 Given the distance and time when invoice generator then should return total fare.
-        /// </summary>
+       
         [Test]
         public void GivenDistanceAndTime_WhenInvoiceGenerator_ThenShouldReturnTotalFare()
         {
@@ -19,6 +19,18 @@ namespace CabInvoiceGenratorTest
             double fare = invoiceGenerator.CalculateFare(distance, time);
             double expected = 25;
             Assert.AreEqual(expected, fare);
+        }
+       
+        /// Test case for UC 2 Givens the multiple rides when invoice generator then should return invoice summary.
+       
+        [Test]
+        public void GivenMultipleRides_WhenInvoiceGenerator_thenShouldReturnInvoiceSummary()
+        {
+            invoiceGenerator = new InvoiceGenerator(RideType.NORMAL);
+            Ride[] rides = { new Ride(2.0, 5), new Ride(0.1, 1) };
+            InvoiceSummary invoiceSummary = invoiceGenerator.CalculateFare(rides);
+            InvoiceSummary expectedSummary = new InvoiceSummary(2, 30.0);
+            Assert.AreEqual(expectedSummary, invoiceSummary);
         }
     }
 }
