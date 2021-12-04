@@ -39,7 +39,9 @@ namespace CabInvoiceGenerator
             }
         }
 
-       
+      
+        /// Calculates the fare.
+        
         public double CalculateFare(double distance, int time)
         {
             double totalFare = 0;
@@ -65,6 +67,10 @@ namespace CabInvoiceGenerator
             }
             return Math.Max(totalFare, MINIMUM_FARE);
         }
+
+      
+        /// Calculates the Total fare number of rides for multiple rides.
+        
         public InvoiceSummary CalculateFare(Ride[] rides)
         {
             double totalFare = 0;
@@ -84,6 +90,10 @@ namespace CabInvoiceGenerator
             }
             return new InvoiceSummary(rides.Length, totalFare);
         }
+
+        
+        /// Calculates the avrage fare for number of rides,total fare,avrage fare for multiple rides.
+        
         public InvoiceSummary CalculateAvrageFare(Ride[] rides)
         {
             double totalFare = 0;
@@ -104,6 +114,39 @@ namespace CabInvoiceGenerator
                 }
             }
             return new InvoiceSummary(rides.Length, totalFare, avrageFare);
+        }
+
+      
+        /// Adds the rides with help of userId.
+        
+        public void AddRides(string userId, Ride[] rides)
+        {
+            try
+            {
+                rideRepository.AddRides(userId, rides);
+            }
+            catch (CabInvoiceException)
+            {
+                if (rides == null)
+                {
+                    throw new CabInvoiceException(CabInvoiceException.ExceptionType.NULL_RIDE, "Rides are null");
+
+                }
+            }
+        }
+
+        /// Gets the invoice summar with the help of userId.
+        
+        public InvoiceSummary GetInvoiceSummary(string userId)
+        {
+            try
+            {
+                return this.CalculateFare(rideRepository.GetRides(userId));
+            }
+            catch (CabInvoiceException)
+            {
+                throw new CabInvoiceException(CabInvoiceException.ExceptionType.INVALID_USER_ID, "Invalid User Id");
+            }
         }
     }
 }
